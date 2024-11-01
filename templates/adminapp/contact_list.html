@@ -1,0 +1,39 @@
+{% load static %}
+
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact List</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h2>Contact List</h2>
+        <form method="get" action="{% url 'contact_list' %}">
+            <input type="text" name="search" placeholder="Search by name or email" value="{{ query }}" class="form-control">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+        <br>
+        <a href="{% url 'add_contact' %}" class="btn btn-success">Add New Contact</a>
+        <ul class="contact-list">
+            {% for contact in contacts %}
+                <li class="contact-card">
+                    <strong>{{ contact.name }}</strong><br>
+                    <p>Email: {{ contact.email }}</p>
+                    <p>Phone: {{ contact.phone }}</p>
+                    <p>Address: {{ contact.address }}</p>
+                    <form method="post" action="{% url 'delete_contact' contact.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                    <a href="mailto:{{ contact.email }}" class="btn btn-info">Email</a>
+                </li>
+            {% empty %}
+                <li>No contacts found.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
